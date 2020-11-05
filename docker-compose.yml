@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  web:
+    container_name: nginx-ism209-2019set
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    ports:
+      - 8080:80
+      - 443:443
+    
+  database:
+    container_name: postgres-nginx-primer
+    image: postgres:latest
+    volumes: 
+      - C:/Users/OD/Documents/Bsc ISMS YR 2 SEM 1/ISM 209 Web-Based Technologies & Multimedia/ISM209_2019set/classcodes/nginx-primer/postgres:/data/postgres
+    env_file: 
+      - nginx-primer.env
+
+  admin:
+    links:
+      - database:postgres-nginx-primer
+    container_name: admin-nginx-primer
+    image: dpage/pgadmin4:latest
+    ports: 
+      - 9000:80
+    volumes:
+      - C:/Users/OD/Documents/Bsc ISMS YR 2 SEM 1/ISM 209 Web-Based Technologies & Multimedia/ISM209_2019set/classcodes/nginx-primer/postgres:/root/.pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@nginx-primer.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    depends_on:
+      - database
